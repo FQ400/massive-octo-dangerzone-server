@@ -1,5 +1,7 @@
 require 'matrix'
 
+require_relative 'game_object'
+
 # make single elements assignable
 class Vector
   def []=(i, x)
@@ -7,23 +9,20 @@ class Vector
   end
 end
 
-class User
+class User < GameObject
   attr_accessor :name
   attr_accessor :socket
-  attr_accessor :icon
-  attr_accessor :position
   attr_accessor :start_position
   attr_accessor :key_states
   attr_accessor :radiant
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
-  def initialize(name, socket, icon)
+  def initialize(id, name, socket, icon)
+    super(id, icon)
     @name = name
     @socket = socket
-    @icon = icon
     @ids = {}
-    @position = @start_position = Vector[0, 0]
     @key_states = Vector[0, 0, 0, 0]
     @radiant = 0
   end

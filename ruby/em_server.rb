@@ -28,7 +28,7 @@ EventMachine.run do
       rescue JSON::ParserError => e
         puts e
       else
-        puts data
+        # puts data
         case data['type']
         when 'general' then
           case data['subtype']
@@ -46,7 +46,7 @@ EventMachine.run do
     end
   end
 
-  EventMachine.add_periodic_timer(0.01) do
+  EventMachine.add_periodic_timer(0.03) do
     @app.ping
   end
 end

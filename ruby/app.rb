@@ -11,6 +11,7 @@ class App
     @chat = EventMachine::Channel.new
     @game = Game.new(self)
     @update_running = false
+    @random = Random.new(2)
   end
 
   def register(data, socket)
@@ -18,7 +19,8 @@ class App
     remove_user(name)
     count = @users.count
     return if count >= 4
-    user = User.new(name, socket, data['icon'])
+    id = @random.rand(1000000)
+    user = User.new(id, name, socket, data['icon'])
     user.subscribe(@chat, :chat)
     @users[socket] = user
     chat_all("User '#{name}' signed on")
@@ -32,7 +34,7 @@ class App
       chat_all("User '#{user.name}' signed off")
       puts "removed #{user.name}"
       @users.delete user.socket
-      msg = {:type => :user, :subtype => :deleted, :data => user.name}.to_json
+      msg = {:type => :user, :subtype => :deleted, :name => user.name}.to_json
       message_all(msg)
     end
   end
@@ -40,7 +42,7 @@ class App
   def chat_all(_message, user=nil)
     user = find_user(user)
     _message = "|#{user.name}| #{_message}" unless user.nil?
-    msg = {:type => :chat, :subtype => :new_message, :data => _message}.to_json
+    msg = {:type => :chat, :subtype => :new_message, :message => _message}.to_json
     @chat.push(msg)
   end
 
@@ -92,10 +94,9 @@ class App
     return if @update_running
     @update_running = true
     @game.move_users
-    positions = {:user => @game.user_pos, :object => {}}
+    positions = {:user => @game.user_pos, :object => @game.object_pos}
     radiants = {:user => @game.user_radiant }
-    data = {:positions => positions, :radiants => radiants }
-    msg = {:type => 'game', :subtype => 'state', :data => data}.to_json
+    msg = {:type => 'game', :subtype => 'state', :positions => positions, :radiants => radiants }.to_json
     message_all(msg)
     @update_running = false
   end

@@ -1,15 +1,19 @@
 require 'eventmachine'
 require 'matrix'
 
+require_relative 'projectile'
+
 class Game
 
   def initialize(app)
     @channel = EventMachine::Channel.new
     @users = []
+    @objects = []
     @app = app
     @start_positions = [[540, 100], [100, 380], [540, 380], [100, 100]]
     @last_update = Time.now.to_f
     @speed = 100
+    @random = Random.new(1)
   end
 
   def join(user)
@@ -36,9 +40,14 @@ class Game
   end
 
   def update_user_list()
-    users = @users.collect { |user| {:name => user.name, :icon => user.icon, :position => user.position.to_a, :radiant => user.radiant }}
-    data = {:users => users}
-    msg = {:type => :game, :subtype => :user_list, :data => data}.to_json
+    users = @users.collect { |user| {:id => user.id, :name => user.name, :icon => user.icon, :position => user.position.to_a, :radiant => user.radiant }}
+    msg = {:type => :game, :subtype => :user_list, :users => users}.to_json
+    @channel.push(msg)
+  end
+
+  def update_object_list()
+    objects = @objects.collect { |object| {:id => object.id, :icon => object.icon, :position => object.position.to_a}}
+    msg = {:type => :game, :subtype => :object_list, :objects => objects}.to_json
     @channel.push(msg)
   end
 
@@ -54,6 +63,10 @@ class Game
       diff *= move_scale
       move_user(user, diff)
     end
+    @objects.each do |object|
+      diff = object.direction * object.speed * move_scale
+      move_user(object, diff)
+    end
   end
 
   def move_user(user, diff)
@@ -62,7 +75,7 @@ class Game
 
   def user_pos
     user_pos = {}
-    @users.each { |user| user_pos[user.name] = user.position.to_a}
+    @users.each { |user| user_pos[user.name] = user.position.to_a }
     user_pos
   end
 
@@ -76,6 +89,18 @@ class Game
     user_radiant
   end
 
+  def object_pos
+    object_pos = {}
+    @objects.each { |object| object_pos[object.id] = object.position.to_a }
+    object_pos
+  end
 
-
+  def shoot(user, position)
+    id = @random.rand(1000000)
+    icon = ''
+    direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
+    object = Projectile.new(id, icon, user.position, direction, 3)
+    @objects.push(object)
+    update_object_list()
+  end
 end
