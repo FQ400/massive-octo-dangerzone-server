@@ -93,9 +93,9 @@ class App
   def ping
     return if @update_running
     @update_running = true
-    @game.move_users
-    positions = {:user => @game.user_pos, :object => @game.object_pos}
-    angles = {:user => @game.user_angle }
+    @game.update_objects
+    positions = @game.object_pos
+    angles = @game.user_angle 
     msg = {:type => 'game', :subtype => 'state', :positions => positions, :angles => angles }.to_json
     message_all(msg)
     @update_running = false

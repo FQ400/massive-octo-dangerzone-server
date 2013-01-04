@@ -21,8 +21,7 @@ class Game
     @users.push(user)
     @app.chat_all("User '#{user.name}' joined the game")
     init_user(user)
-    update_user_list()
-    msg = {:type => :game, :subtype => :init}.to_json
+    msg = {:type => :game, :subtype => :init, :id => user.id}.to_json
     user.socket.send(msg)
   end
 
@@ -32,26 +31,35 @@ class Game
     user.unsubscribe(@channel, :game)
     @users.delete(user)
     @app.chat_all("User '#{user.name}' left the game")
+    objects = [{:id => user.id}]
+    msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
+    @channel.push(msg)
   end
 
   def init_user(user)
-    user.subscribe(@channel, :game)
     user.init_position(@start_positions.pop)
+    objects = [user]
+    update_object_list(objects, nil)
+    user.subscribe(@channel, :game)
+    objects = (@users + @objects).collect { |o| {:id => o.id, :icon => o.icon, :position => o.position} }
+    msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
+    user.socket.send(msg)
   end
 
-  def update_user_list()
-    users = @users.collect { |user| {:id => user.id, :name => user.name, :icon => user.icon, :position => user.position.to_a, :angle => user.angle }}
-    msg = {:type => :game, :subtype => :user_list, :users => users}.to_json
-    @channel.push(msg)
+  def update_object_list(created=nil, deleted=nil)
+    if created
+      objects = created.collect { |o| {:id => o.id, :icon => o.icon, :position => o.position} }
+      msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
+      @channel.push(msg)
+    end
+    if deleted
+      objects = deleted.collect { |o| {:id => o.id} }
+      msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
+      @channel.push(msg)
+    end
   end
 
-  def update_object_list()
-    objects = @objects.collect { |object| {:id => object.id, :icon => object.icon, :position => object.position.to_a}}
-    msg = {:type => :game, :subtype => :object_list, :objects => objects}.to_json
-    @channel.push(msg)
-  end
-
-  def move_users
+  def update_objects
     now = Time.now.to_f
     time_since_last = now - @last_update
     move_scale = time_since_last * @speed
@@ -63,44 +71,37 @@ class Game
       diff *= move_scale
       move_user(user, diff)
     end
+    deleted = @objects.select { |object| not object.alive? }
+    @objects -= deleted
     @objects.each do |object|
       diff = object.direction * object.speed * move_scale
       move_user(object, diff)
     end
+    update_object_list(nil, deleted) unless deleted.empty?
   end
 
   def move_user(user, diff)
     user.position += Vector.elements(diff)
   end
 
-  def user_pos
-    user_pos = {}
-    @users.each { |user| user_pos[user.name] = user.position.to_a }
-    user_pos
-  end
-
   def rotate_user(user, angle)
-    user.angle = angle * -1
+    user.angle = -angle
   end
 
   def user_angle
-    user_angle = {}
-    @users.each { |user| user_angle[user.name] = user.angle}
-    user_angle
+    (@objects + @users).collect { |o| {:id => o.id, :angle => o.angle} }
   end
 
   def object_pos
-    object_pos = {}
-    @objects.each { |object| object_pos[object.id] = object.position.to_a }
-    object_pos
+    (@objects + @users).collect { |o| {:id => o.id, :position => o.position.to_a} }
   end
 
   def shoot(user, position)
     id = @random.rand(1000000)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
-    object = Projectile.new(id, icon, user.position, direction, 3)
+    object = Projectile.new(id, icon, user.position, direction, 3, 100, 300)
     @objects.push(object)
-    update_object_list()
+    update_object_list([object], nil)
   end
 end
