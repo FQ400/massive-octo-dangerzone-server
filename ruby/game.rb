@@ -21,7 +21,7 @@ class Game
     msg = {:type => :game, :subtype => :init}.to_json
     user.socket.send(msg)
   end
-  
+
   def leave(user)
     return unless @users.include?(user)
     @start_positions.push(user.start_position.to_a)
@@ -36,7 +36,7 @@ class Game
   end
 
   def update_user_list()
-    users = @users.collect { |user| {:name => user.name, :icon => user.icon, :position => user.position.to_a}}
+    users = @users.collect { |user| {:name => user.name, :icon => user.icon, :position => user.position.to_a, :radiant => user.radiant }}
     data = {:users => users}
     msg = {:type => :game, :subtype => :user_list, :data => data}.to_json
     @channel.push(msg)
@@ -65,4 +65,17 @@ class Game
     @users.each { |user| user_pos[user.name] = user.position.to_a}
     user_pos
   end
+
+  def rotate_user(user, radiant)
+    user.radiant = radiant * -1
+  end
+
+  def user_radiant
+    user_radiant = {}
+    @users.each { |user| user_radiant[user.name] = user.radiant}
+    user_radiant
+  end
+
+
+
 end

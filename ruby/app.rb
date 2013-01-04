@@ -16,7 +16,7 @@ class App
   def register(data, socket)
     name = data['name']
     remove_user(name)
-    count = @users.count 
+    count = @users.count
     return if count >= 4
     user = User.new(name, socket, data['icon'])
     user.subscribe(@chat, :chat)
@@ -78,6 +78,7 @@ class App
     when 'keydown' then key(user, data['data'], 1)
     when 'keyup' then key(user, data['data'], 0)
     when 'shoot' then @game.shoot(user, data['data'])
+    when 'rotate' then @game.rotate_user(user, data['data'])
     end
   end
 
@@ -87,12 +88,14 @@ class App
     end
   end
 
+
   def ping
     return if @update_running
     @update_running = true
     @game.move_users
     positions = {:user => @game.user_pos, :object => {}}
-    data = {:positions => positions}
+    radiants = {:user => @game.user_radiant }
+    data = {:positions => positions, :radiants => radiants }
     msg = {:type => 'game', :subtype => 'state', :data => data}.to_json
     message_all(msg)
     @update_running = false

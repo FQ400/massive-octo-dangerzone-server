@@ -14,6 +14,8 @@ class User
   attr_accessor :position
   attr_accessor :start_position
   attr_accessor :key_states
+  attr_accessor :radiant
+
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
@@ -24,6 +26,7 @@ class User
     @ids = {}
     @position = @start_position = Vector[0, 0]
     @key_states = Vector[0, 0, 0, 0]
+    @radiant = 0
   end
 
   def subscribe(channel, name)
@@ -43,4 +46,5 @@ class User
   def keypress_direction(direction, down)
     @key_states[DIRECTIONS.index(direction)] = down
   end
+
 end
