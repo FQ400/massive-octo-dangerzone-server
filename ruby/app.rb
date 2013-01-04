@@ -71,40 +71,19 @@ class App
 
   def game_message(data, socket)
     user = find_user(socket)
-    return unless user
+    return if user.nil?
     case data['subtype']
-    when 'join' then user_join(user)
-    when 'leave' then user_leave(user)
-    when 'keydown' then key_down(user, data['data'])
-    when 'keyup' then key_up(user, data['data'])
+    when 'join' then @game.join(user)
+    when 'leave' then @game.leave(user)
+    when 'keydown' then key(user, data['data'], 1)
+    when 'keyup' then key(user, data['data'], 0)
+    when 'shoot' then @game.shoot(user, data['data'])
     end
   end
 
-  def user_join(user)
-    return if user.nil?
-    @game.join(user)
-  end
-
-  def user_leave(user)
-    return if user.nil?
-    @game.leave(user)
-  end
-
-  def key_down(user, key)
-    case key
-    when 'left' then user.key_left(1)
-    when 'up' then user.key_up(1)
-    when 'right' then user.key_right(1)
-    when 'down' then user.key_down(1)
-    end
-  end
-
-  def key_up(user, key)
-    case key
-    when 'left' then user.key_left(0)
-    when 'up' then user.key_up(0)
-    when 'right' then user.key_right(0)
-    when 'down' then user.key_down(0)
+  def key(user, key, down)
+    if User::DIRECTIONS.include?(key)
+      user.keypress_direction(key, down)
     end
   end
 

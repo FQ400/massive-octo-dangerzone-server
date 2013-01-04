@@ -15,6 +15,8 @@ class User
   attr_accessor :start_position
   attr_accessor :key_states
 
+  DIRECTIONS = ['left', 'up', 'right', 'down']
+
   def initialize(name, socket, icon)
     @name = name
     @socket = socket
@@ -38,19 +40,7 @@ class User
     @position = @start_position = Vector.elements(position)
   end
 
-  def key_left(down)
-    @key_states[0] = down
-  end
-
-  def key_up(down)
-    @key_states[1] = down
-  end
-
-  def key_right(down)
-    @key_states[2] = down
-  end
-
-  def key_down(down)
-    @key_states[3] = down
+  def keypress_direction(direction, down)
+    @key_states[DIRECTIONS.index(direction)] = down
   end
 end
