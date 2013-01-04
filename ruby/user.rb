@@ -16,7 +16,6 @@ class User
   attr_accessor :key_states
   attr_accessor :radiant
 
-
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
   def initialize(name, socket, icon)
@@ -46,5 +45,4 @@ class User
   def keypress_direction(direction, down)
     @key_states[DIRECTIONS.index(direction)] = down
   end
-
 end

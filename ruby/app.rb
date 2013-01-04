@@ -88,7 +88,6 @@ class App
     end
   end
 
-
   def ping
     return if @update_running
     @update_running = true
