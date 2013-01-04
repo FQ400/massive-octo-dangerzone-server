@@ -40,7 +40,7 @@ class Game
   end
 
   def update_user_list()
-    users = @users.collect { |user| {:id => user.id, :name => user.name, :icon => user.icon, :position => user.position.to_a, :radiant => user.radiant }}
+    users = @users.collect { |user| {:id => user.id, :name => user.name, :icon => user.icon, :position => user.position.to_a, :angle => user.angle }}
     msg = {:type => :game, :subtype => :user_list, :users => users}.to_json
     @channel.push(msg)
   end
@@ -79,14 +79,14 @@ class Game
     user_pos
   end
 
-  def rotate_user(user, radiant)
-    user.radiant = radiant * -1
+  def rotate_user(user, angle)
+    user.angle = angle * -1
   end
 
-  def user_radiant
-    user_radiant = {}
-    @users.each { |user| user_radiant[user.name] = user.radiant}
-    user_radiant
+  def user_angle
+    user_angle = {}
+    @users.each { |user| user_angle[user.name] = user.angle}
+    user_angle
   end
 
   def object_pos
