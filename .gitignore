@@ -1,0 +1,7 @@
+.DS_Store
+.sass-cache/
+public/javascripts/*
+!public/javascripts/vendor
+!public/javascripts/templates
+public/stylesheets
+.gemtags
