@@ -15,7 +15,7 @@ EventMachine.run do
 
   @app = App.new
 
-  EventMachine::WebSocket.start(:host => 'localhost', :port => 9020) do |socket|
+  EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 9020) do |socket|
   # EventMachine::WebSocket.start(:host => '10.20.1.9', :port => 9020) do |socket|
 
     socket.onopen do

@@ -14,6 +14,7 @@ class User < GameObject
   attr_accessor :socket
   attr_accessor :start_position
   attr_accessor :key_states
+  attr_accessor :size
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
@@ -23,6 +24,7 @@ class User < GameObject
     @socket = socket
     @ids = {}
     @key_states = Vector[0, 0, 0, 0]
+    @size = 60
   end
 
   def subscribe(channel, name)

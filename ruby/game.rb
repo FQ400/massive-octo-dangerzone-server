@@ -41,14 +41,14 @@ class Game
     objects = [user]
     update_object_list(objects, nil)
     user.subscribe(@channel, :game)
-    objects = (@users + @objects).collect { |o| {:id => o.id, :icon => o.icon, :position => o.position} }
+    objects = (@users + @objects).collect { |o| {:id => o.id, :icon => o.icon, :position => o.position, :size => o.size} }
     msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
     user.socket.send(msg)
   end
 
   def update_object_list(created=nil, deleted=nil)
     if created
-      objects = created.collect { |o| {:id => o.id, :icon => o.icon, :position => o.position} }
+      objects = created.collect { |o| {:id => o.id, :icon => o.icon, :position => o.position, :size => o.size} }
       msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
       @channel.push(msg)
     end
@@ -69,18 +69,18 @@ class Game
       diff2 = [1, 1].zip(user.key_states[2..3]).collect { |e1, e2| e1 * e2 }
       diff = Vector.elements(diff1) + Vector.elements(diff2)
       diff *= move_scale
-      move_user(user, diff)
+      move_object(user, diff)
     end
     deleted = @objects.select { |object| not object.alive? }
     @objects -= deleted
     @objects.each do |object|
       diff = object.direction * object.speed * move_scale
-      move_user(object, diff)
+      move_object(object, diff)
     end
     update_object_list(nil, deleted) unless deleted.empty?
   end
 
-  def move_user(user, diff)
+  def move_object(user, diff)
     user.position += Vector.elements(diff)
   end
 
@@ -101,6 +101,7 @@ class Game
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
     object = Projectile.new(id, icon, user.position, direction, 3, 100, 300)
+    object.angle = user.angle
     @objects.push(object)
     update_object_list([object], nil)
   end
