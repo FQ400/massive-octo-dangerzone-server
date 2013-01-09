@@ -18,14 +18,9 @@ class Game
   end
 
   def init_objects
-    id = @random.rand(1000000)
-    object = Pickup.new(id, '', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1)
-    @scene.objects.push(object)
-    update_object_list([object], nil)
-    id = @random.rand(1000000)
-    object = Pickup.new(id, '', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1)
-    @scene.objects.push(object)
-    update_object_list([object], nil)
+    objects = [Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1), Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1)]
+    @scene.objects += objects
+    update_object_list(objects, nil)
   end
 
   def join(user)
