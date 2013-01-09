@@ -6,11 +6,16 @@ class GameObject
   attr_accessor :position
   attr_accessor :direction
   attr_accessor :angle
+  attr_accessor :speed
+  attr_accessor :direction
+  attr_accessor :size
 
-  def initialize(id, icon, position=Vector[0, 0], ttl=-1, range=300)
+  def initialize(id, icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
     @id = id
     @icon = icon
     @position = @start_position = position
+    @size = 60
+    @speed = speed
     @ttl = ttl
     @spawn_time = Time.now.to_f
     @range = range

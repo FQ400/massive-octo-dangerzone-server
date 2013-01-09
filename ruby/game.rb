@@ -12,7 +12,6 @@ class Game
     @app = app
     @start_positions = [[540, 100], [100, 380], [540, 380], [100, 100]]
     @last_update = Time.now.to_f
-    @speed = 100
     @random = Random.new(1)
   end
 
@@ -62,13 +61,13 @@ class Game
   def update_objects
     now = Time.now.to_f
     time_since_last = now - @last_update
-    move_scale = time_since_last * @speed
+    move_scale = time_since_last
     @last_update = now
     @users.each do |user|
       diff1 = [-1, -1].zip(user.key_states[0..1]).collect { |e1, e2| e1 * e2 }
       diff2 = [1, 1].zip(user.key_states[2..3]).collect { |e1, e2| e1 * e2 }
       diff = Vector.elements(diff1) + Vector.elements(diff2)
-      diff *= move_scale
+      diff *= user.speed * move_scale
       move_object(user, diff)
     end
     deleted = @objects.select { |object| not object.alive? }
@@ -100,7 +99,7 @@ class Game
     id = @random.rand(1000000)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
-    object = Projectile.new(id, icon, user.position, direction, 3, 100, 300)
+    object = Projectile.new(id, icon, user.position, direction, 3, 300, 100, 300)
     object.angle = user.angle
     @objects.push(object)
     update_object_list([object], nil)

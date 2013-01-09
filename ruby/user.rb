@@ -14,12 +14,11 @@ class User < GameObject
   attr_accessor :socket
   attr_accessor :start_position
   attr_accessor :key_states
-  attr_accessor :size
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
   def initialize(id, name, socket, icon)
-    super(id, icon, Vector[0, 0], -1, -1)
+    super(id, icon, Vector[0, 0], 60, 100, -1, -1)
     @name = name
     @socket = socket
     @ids = {}
