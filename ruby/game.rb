@@ -3,6 +3,7 @@ require 'matrix'
 
 require_relative 'projectile'
 require_relative 'pickup'
+require_relative 'shrinker'
 require_relative 'scene'
 require_relative 'collision_handler'
 
@@ -18,7 +19,11 @@ class Game
   end
 
   def init_objects
-    objects = [Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1), Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1)]
+    objects = [
+      Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1), 
+      Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1),
+      Shrinker.new('', Vector[400, 300], Vector[0, 0], 3, 300, -1, -1),
+    ]
     @scene.objects += objects
     update_object_list(created: objects)
   end
@@ -89,6 +94,10 @@ class Game
     (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :angle) }
   end
 
+  def object_size
+    (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :size) }
+  end
+
   def object_pos
     (@scene.objects + @scene.users).collect { |o| {:id => o.id, :position => o.position.to_a} }
     #(@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :position) }
@@ -97,7 +106,7 @@ class Game
   def shoot(user, position)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
-    object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 300)
+    object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 900)
     object.angle = user.angle
     @scene.objects.push(object)
     update_object_list(created: [object])

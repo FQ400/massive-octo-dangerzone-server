@@ -43,7 +43,11 @@ class CollisionHandler
   end
 
   def handle_objects(object1, object2)
-    puts 'objects'
+    if object1.is_a?(Projectile) and not object2.is_a?(Projectile)
+      object2.kill
+    elsif object2.is_a?(Projectile) and not object1.is_a?(Projectile)
+      object1.kill
+    end
   end
 
   def handle_user_object(user, object)
