@@ -15,3 +15,10 @@ class Array
     Vector.elements(self)
   end
 end
+
+# make single elements assignable
+class Vector
+  def []=(i, x)
+    @elements[i] = x
+  end
+end

@@ -1,11 +1,3 @@
-require 'eventmachine'
-require 'em-websocket'
-require 'matrix'
-
-require_relative 'ruby_extension'
-require_relative 'user'
-require_relative 'game'
-
 class App
 
   def initialize

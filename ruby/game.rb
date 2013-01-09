@@ -1,12 +1,3 @@
-require 'eventmachine'
-require 'matrix'
-
-require_relative 'projectile'
-require_relative 'pickup'
-require_relative 'shrinker'
-require_relative 'scene'
-require_relative 'collision_handler'
-
 class Game
 
   def initialize(app)
@@ -104,7 +95,7 @@ class Game
 
   def shoot(user, position)
     icon = ''
-    direction = (position.to_v - user.position.to_v).normalize()
+    direction = (position.to_v - user.position).normalize()
     object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 900)
     object.angle = user.angle
     @scene.objects.push(object)

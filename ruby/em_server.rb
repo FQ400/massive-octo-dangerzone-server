@@ -6,8 +6,14 @@ require 'eventmachine'
 require 'em-websocket'
 require 'em-hiredis'
 require 'json'
+require 'matrix'
 
-require_relative 'app'
+# require all ruby files of the game
+Dir.foreach(File.dirname(__FILE__)) do |file|
+  if (File.absolute_path(file) != __FILE__) and not File.directory?(file)
+    require File.split(File.absolute_path(__FILE__))[0]+'/'+file
+  end
+end
 
 EventMachine.run do
 
