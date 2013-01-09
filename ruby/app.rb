@@ -95,7 +95,7 @@ class App
     @update_running = true
     @game.update_objects
     positions = @game.object_pos
-    angles = @game.user_angle
+    angles = @game.object_angle
     msg = {:type => 'game', :subtype => 'state', :positions => positions, :angles => angles }.to_json
     message_all(msg)
     @update_running = false

@@ -81,7 +81,7 @@ class Game
     user.angle = -angle
   end
 
-  def user_angle
+  def object_angle
     (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :angle) }
   end
 
