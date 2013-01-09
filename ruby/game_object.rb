@@ -26,4 +26,14 @@ class GameObject
   def alive?
     (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and (@range < 0 or (@start_position - @position).norm < @range)
   end
+
+  def hashify
+    {
+      id: @id,
+      icon: @icon,
+      position: @position,
+      size: @size,
+      angle: @angle
+    }
+  end
 end

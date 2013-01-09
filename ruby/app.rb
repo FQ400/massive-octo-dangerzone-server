@@ -1,6 +1,7 @@
 require 'eventmachine'
 require 'em-websocket'
 
+require_relative 'ruby_extension'
 require_relative 'user'
 require_relative 'game'
 
@@ -16,8 +17,9 @@ class App
   def register(data, socket)
     name = data['name']
     remove_user(name)
-    count = @users.count
-    return if count >= 4
+
+    # only 4 players allowed
+    return if @users.count >= 4
     user = User.new(name, socket, data['icon'])
     user.subscribe(@chat, :chat)
     @users[socket] = user

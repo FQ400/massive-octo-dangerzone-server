@@ -39,19 +39,19 @@ class Game
     objects = [user]
     update_object_list(objects, nil)
     user.subscribe(@channel, :game)
-    objects = (@users + @objects).collect { |o| {:id => o.id, :icon => o.icon, :position => o.position, :size => o.size} }
+    objects = (@users + @objects).collect { |o| o.hashify }
     msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
     user.socket.send(msg)
   end
 
   def update_object_list(created=nil, deleted=nil)
     if created
-      objects = created.collect { |o| {:id => o.id, :icon => o.icon, :position => o.position, :size => o.size} }
+      objects = created.collect { |o| o.hashify }
       msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
       @channel.push(msg)
     end
     if deleted
-      objects = deleted.collect { |o| {:id => o.id} }
+      objects = deleted.collect { |o| o.hashify.only(:id) }
       msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
       @channel.push(msg)
     end
@@ -83,11 +83,12 @@ class Game
   end
 
   def user_angle
-    (@objects + @users).collect { |o| {:id => o.id, :angle => o.angle} }
+    (@objects + @users).collect { |o| o.hashify.only(:id, :angle) }
   end
 
   def object_pos
     (@objects + @users).collect { |o| {:id => o.id, :position => o.position.to_a} }
+    #(@objects + @users).collect { |o| o.hashify.only(:id, :position) }
   end
 
   def shoot(user, position)
