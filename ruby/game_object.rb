@@ -1,15 +1,7 @@
 require 'matrix'
 
 class GameObject
-  attr_accessor :id
-  attr_accessor :icon
-  attr_accessor :position
-  attr_accessor :direction
-  attr_accessor :angle
-  attr_accessor :speed
-  attr_accessor :direction
-  attr_accessor :size
-  attr_accessor :owner
+  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner
 
   def initialize(icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
     @id = rand(10000000)
