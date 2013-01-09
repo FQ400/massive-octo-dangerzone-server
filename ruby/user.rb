@@ -22,7 +22,7 @@ class User < GameObject
     @name = name
     @socket = socket
     @ids = {}
-    @key_states = Vector[0, 0, 0, 0]
+    @key_states = { left: 0, right: 0, up: 0, down: 0 }
     @size = 60
   end
 
@@ -41,6 +41,22 @@ class User < GameObject
   end
 
   def keypress_direction(direction, down)
-    @key_states[DIRECTIONS.index(direction)] = down
+    @key_states[direction.to_sym] = down
   end
+
+  def rotation_matrix
+    c, s = Math.cos(@angle), Math.sin(@angle)
+    Matrix[
+      [c, -s],
+      [s, c]
+    ]
+  end
+
+  def move_direction
+    Vector[
+      (@key_states[:right] - @key_states[:left]),
+      (@key_states[:down] - @key_states[:up])
+    ]
+  end
+
 end

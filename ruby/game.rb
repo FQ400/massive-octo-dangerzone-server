@@ -64,10 +64,7 @@ class Game
     move_scale = time_since_last
     @last_update = now
     @users.each do |user|
-      diff1 = [-1, -1].zip(user.key_states[0..1]).collect { |e1, e2| e1 * e2 }
-      diff2 = [1, 1].zip(user.key_states[2..3]).collect { |e1, e2| e1 * e2 }
-      diff = Vector.elements(diff1) + Vector.elements(diff2)
-      user.direction = diff
+      user.direction = user.rotation_matrix * user.move_direction
     end
     deleted = @objects.select { |object| not object.alive? }
     @objects -= deleted
