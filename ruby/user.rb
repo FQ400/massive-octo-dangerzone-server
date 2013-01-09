@@ -1,5 +1,3 @@
-require 'matrix'
-
 require_relative 'game_object'
 
 # make single elements assignable
@@ -34,7 +32,7 @@ class User < GameObject
   end
 
   def init_position(position)
-    @position = @start_position = Vector.elements(position)
+    @position = @start_position = position.to_v
   end
 
   def keypress_direction(direction, down)

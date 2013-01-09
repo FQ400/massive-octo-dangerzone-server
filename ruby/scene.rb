@@ -1,7 +1,6 @@
-require 'matrix'
-
 class Scene
-  attr_accessor :users, :objects
+  attr_accessor :users
+  attr_accessor :objects
 
   def initialize
     @users = []
@@ -32,6 +31,6 @@ class Scene
   end
 
   def move_object(user, diff)
-    user.position += Vector.elements(diff)
+    user.position += diff
   end
 end

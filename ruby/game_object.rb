@@ -1,5 +1,3 @@
-require 'matrix'
-
 class GameObject
   attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner
 

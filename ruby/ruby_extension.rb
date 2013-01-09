@@ -8,3 +8,10 @@ class Hash
     new_hash
   end
 end
+
+class Array
+  # convert an array to vector
+  def to_v
+    Vector.elements(self)
+  end
+end

@@ -104,7 +104,7 @@ class Game
 
   def shoot(user, position)
     icon = ''
-    direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
+    direction = (position.to_v - user.position.to_v).normalize()
     object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 900)
     object.angle = user.angle
     @scene.objects.push(object)

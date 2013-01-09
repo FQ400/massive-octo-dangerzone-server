@@ -1,5 +1,6 @@
 require 'eventmachine'
 require 'em-websocket'
+require 'matrix'
 
 require_relative 'ruby_extension'
 require_relative 'user'
