@@ -20,7 +20,7 @@ class Game
   def init_objects
     objects = [Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1), Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1)]
     @scene.objects += objects
-    update_object_list(objects, nil)
+    update_object_list(created: objects)
   end
 
   def join(user)
@@ -46,14 +46,17 @@ class Game
   def init_user(user)
     user.init_position(@start_positions.pop)
     objects = [user]
-    update_object_list(objects, nil)
+    update_object_list(created: objects)
     user.subscribe(@channel, :game)
     objects = (@scene.users + @scene.objects).collect { |o| o.hashify }
     msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
     user.socket.send(msg)
   end
 
-  def update_object_list(created=nil, deleted=nil)
+  # def update_object_list(created=nil, deleted=nil)
+  def update_object_list(args)
+    created = args[:created]
+    deleted = args[:deleted]
     if created
       objects = created.collect { |o| o.hashify }
       msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
@@ -64,13 +67,14 @@ class Game
       msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
       @channel.push(msg)
     end
+
   end
 
   def update_objects
     @scene.move_users
     deleted = @scene.remove_dead
     @scene.move_objects
-    update_object_list(nil, deleted) unless deleted.empty?
+    update_object_list(deleted: deleted) unless deleted.empty?
     collisions = @collision_handler.detect
     collisions.each do |collision|
       @collision_handler.handle(collision)
@@ -96,6 +100,6 @@ class Game
     object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 300)
     object.angle = user.angle
     @scene.objects.push(object)
-    update_object_list([object], nil)
+    update_object_list(created: [object])
   end
 end
