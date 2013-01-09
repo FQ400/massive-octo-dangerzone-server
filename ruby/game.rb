@@ -91,10 +91,9 @@ class Game
   end
 
   def shoot(user, position)
-    id = rand(1000000)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
-    object = Projectile.new(id, icon, user.position, direction, 3, 300, 100, 300)
+    object = Projectile.new(icon, user.position, direction, 3, 300, 100, 300)
     object.angle = user.angle
     @objects.push(object)
     update_object_list([object], nil)

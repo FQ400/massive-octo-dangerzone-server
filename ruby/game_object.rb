@@ -10,8 +10,8 @@ class GameObject
   attr_accessor :direction
   attr_accessor :size
 
-  def initialize(id, icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
-    @id = id
+  def initialize(icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
+    @id = rand(10000000)
     @icon = icon
     @position = @start_position = position
     @size = 60

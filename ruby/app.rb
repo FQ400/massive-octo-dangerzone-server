@@ -18,8 +18,7 @@ class App
     remove_user(name)
     count = @users.count
     return if count >= 4
-    id = rand(1000000)
-    user = User.new(id, name, socket, data['icon'])
+    user = User.new(name, socket, data['icon'])
     user.subscribe(@chat, :chat)
     @users[socket] = user
     chat_all("User '#{name}' signed on")
