@@ -3,8 +3,7 @@ require_relative 'pickup'
 
 class CollisionHandler
 
-  def initialize(game, scene)
-    @game = game
+  def initialize(scene)
     @scene = scene
   end
 

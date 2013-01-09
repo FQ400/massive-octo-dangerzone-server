@@ -15,12 +15,12 @@ class Game
     @app = app
     @start_positions = [[540, 100], [100, 380], [540, 380], [100, 100]]
     init_objects()
-    @collision_handler = CollisionHandler.new(self, @scene)
+    @collision_handler = CollisionHandler.new(@scene)
   end
 
   def init_objects
     objects = [
-      Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1), 
+      Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1),
       Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1),
       Shrinker.new('', Vector[400, 300], Vector[0, 0], 3, 300, -1, -1),
     ]
