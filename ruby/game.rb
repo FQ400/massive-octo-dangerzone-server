@@ -12,7 +12,6 @@ class Game
     @app = app
     @start_positions = [[540, 100], [100, 380], [540, 380], [100, 100]]
     @last_update = Time.now.to_f
-    @random = Random.new(1)
   end
 
   def join(user)
@@ -95,7 +94,7 @@ class Game
   end
 
   def shoot(user, position)
-    id = @random.rand(1000000)
+    id = rand(1000000)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
     object = Projectile.new(id, icon, user.position, direction, 3, 300, 100, 300)

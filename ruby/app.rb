@@ -11,7 +11,6 @@ class App
     @chat = EventMachine::Channel.new
     @game = Game.new(self)
     @update_running = false
-    @random = Random.new(2)
   end
 
   def register(data, socket)
@@ -19,7 +18,7 @@ class App
     remove_user(name)
     count = @users.count
     return if count >= 4
-    id = @random.rand(1000000)
+    id = rand(1000000)
     user = User.new(id, name, socket, data['icon'])
     user.subscribe(@chat, :chat)
     @users[socket] = user
@@ -95,7 +94,7 @@ class App
     @update_running = true
     @game.update_objects
     positions = @game.object_pos
-    angles = @game.user_angle 
+    angles = @game.user_angle
     msg = {:type => 'game', :subtype => 'state', :positions => positions, :angles => angles }.to_json
     message_all(msg)
     @update_running = false
