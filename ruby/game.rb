@@ -67,12 +67,11 @@ class Game
       diff1 = [-1, -1].zip(user.key_states[0..1]).collect { |e1, e2| e1 * e2 }
       diff2 = [1, 1].zip(user.key_states[2..3]).collect { |e1, e2| e1 * e2 }
       diff = Vector.elements(diff1) + Vector.elements(diff2)
-      diff *= user.speed * move_scale
-      move_object(user, diff)
+      user.direction = diff
     end
     deleted = @objects.select { |object| not object.alive? }
     @objects -= deleted
-    @objects.each do |object|
+    (@objects + @users).each do |object|
       diff = object.direction * object.speed * move_scale
       move_object(object, diff)
     end
