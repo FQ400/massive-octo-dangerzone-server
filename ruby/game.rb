@@ -58,7 +58,6 @@ class Game
     user.socket.send(msg)
   end
 
-  # def update_object_list(created=nil, deleted=nil)
   def update_object_list(args)
     created = args[:created]
     deleted = args[:deleted]
