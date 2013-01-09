@@ -9,6 +9,7 @@ class GameObject
   attr_accessor :speed
   attr_accessor :direction
   attr_accessor :size
+  attr_accessor :owner
 
   def initialize(icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
     @id = rand(10000000)
@@ -21,10 +22,15 @@ class GameObject
     @range = range
     @direction = Vector[0, 0]
     @angle = 0
+    @killed = false
   end
 
   def alive?
-    (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and (@range < 0 or (@start_position - @position).norm < @range)
+    (not @killed) and (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and (@range < 0 or (@start_position - @position).norm < @range)
+  end
+
+  def kill
+    @killed = true
   end
 
   def hashify

@@ -2,21 +2,35 @@ require 'eventmachine'
 require 'matrix'
 
 require_relative 'projectile'
+require_relative 'pickup'
+require_relative 'scene'
+require_relative 'collision_handler'
 
 class Game
 
   def initialize(app)
     @channel = EventMachine::Channel.new
-    @users = []
-    @objects = []
+    @scene = Scene.new
     @app = app
     @start_positions = [[540, 100], [100, 380], [540, 380], [100, 100]]
-    @last_update = Time.now.to_f
+    init_objects()
+    @collision_handler = CollisionHandler.new(self, @scene)
+  end
+
+  def init_objects
+    id = @random.rand(1000000)
+    object = Pickup.new(id, '', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1)
+    @scene.objects.push(object)
+    update_object_list([object], nil)
+    id = @random.rand(1000000)
+    object = Pickup.new(id, '', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1)
+    @scene.objects.push(object)
+    update_object_list([object], nil)
   end
 
   def join(user)
-    return if @users.include?(user)
-    @users.push(user)
+    return if @scene.users.include?(user)
+    @scene.users.push(user)
     @app.chat_all("User '#{user.name}' joined the game")
     init_user(user)
     msg = {:type => :game, :subtype => :init, :id => user.id}.to_json
@@ -24,10 +38,10 @@ class Game
   end
 
   def leave(user)
-    return unless @users.include?(user)
+    return unless @scene.users.include?(user)
     @start_positions.push(user.start_position.to_a)
     user.unsubscribe(@channel, :game)
-    @users.delete(user)
+    @scene.users.delete(user)
     @app.chat_all("User '#{user.name}' left the game")
     objects = [{:id => user.id}]
     msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
@@ -39,7 +53,7 @@ class Game
     objects = [user]
     update_object_list(objects, nil)
     user.subscribe(@channel, :game)
-    objects = (@users + @objects).collect { |o| o.hashify }
+    objects = (@scene.users + @scene.objects).collect { |o| o.hashify }
     msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
     user.socket.send(msg)
   end
@@ -58,24 +72,14 @@ class Game
   end
 
   def update_objects
-    now = Time.now.to_f
-    time_since_last = now - @last_update
-    move_scale = time_since_last
-    @last_update = now
-    @users.each do |user|
-      user.direction = user.rotation_matrix * user.move_direction
-    end
-    deleted = @objects.select { |object| not object.alive? }
-    @objects -= deleted
-    (@objects + @users).each do |object|
-      diff = object.direction * object.speed * move_scale
-      move_object(object, diff)
-    end
+    @scene.move_users
+    deleted = @scene.remove_dead
+    @scene.move_objects
     update_object_list(nil, deleted) unless deleted.empty?
-  end
-
-  def move_object(user, diff)
-    user.position += Vector.elements(diff)
+    collisions = @collision_handler.detect
+    collisions.each do |collision|
+      @collision_handler.handle(collision)
+    end
   end
 
   def rotate_user(user, angle)
@@ -83,20 +87,20 @@ class Game
   end
 
   def user_angle
-    (@objects + @users).collect { |o| o.hashify.only(:id, :angle) }
+    (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :angle) }
   end
 
   def object_pos
-    (@objects + @users).collect { |o| {:id => o.id, :position => o.position.to_a} }
-    #(@objects + @users).collect { |o| o.hashify.only(:id, :position) }
+    (@scene.objects + @scene.users).collect { |o| {:id => o.id, :position => o.position.to_a} }
+    #(@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :position) }
   end
 
   def shoot(user, position)
     icon = ''
     direction = (Vector.elements(position) - Vector.elements(user.position)).normalize()
-    object = Projectile.new(icon, user.position, direction, 3, 300, 100, 300)
+    object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 300)
     object.angle = user.angle
-    @objects.push(object)
+    @scene.objects.push(object)
     update_object_list([object], nil)
   end
 end
