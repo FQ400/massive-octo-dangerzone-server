@@ -1,8 +1,7 @@
 require 'matrix'
 
 class Scene
-  attr_accessor :users
-  attr_accessor :objects
+  attr_accessor :users, :objects
 
   def initialize
     @users = []

@@ -10,10 +10,7 @@ class Vector
 end
 
 class User < GameObject
-  attr_accessor :name
-  attr_accessor :socket
-  attr_accessor :start_position
-  attr_accessor :key_states
+  attr_accessor :name, :socket, :start_position, :key_states
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
