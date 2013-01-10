@@ -22,7 +22,9 @@ class Game
   def join(user)
     return if @scene.users.include?(user)
     @scene.users.push(user)
-    @app.chat_all("User '#{user.name}' joined the game")
+    msg = ChatMessage.new(body: "User '#{user.name}' joined the game")
+    @app.chat.send(msg)
+    # @app.chat_all("User '#{user.name}' joined the game")
     init_user(user)
     msg = {:type => :game, :subtype => :init, :id => user.id}.to_json
     user.socket.send(msg)
@@ -33,7 +35,14 @@ class Game
     @start_positions.push(user.start_position.to_a)
     user.unsubscribe(@channel, :game)
     @scene.users.delete(user)
-    @app.chat_all("User '#{user.name}' left the game")
+
+    msg = ChatMessage.new({
+      sender: :game,
+      body: "User '#{user.name}' joined the game"
+    })
+    @app.chat.send(msg)
+
+    # @app.chat_all("User '#{user.name}' left the game")
     objects = [{:id => user.id}]
     msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
     @channel.push(msg)

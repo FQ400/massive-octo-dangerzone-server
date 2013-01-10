@@ -1,8 +1,11 @@
 class App
 
+  attr_reader :chat
+
   def initialize
     @users = {}
-    @chat = EventMachine::Channel.new
+    # @chat = EventMachine::Channel.new
+    @chat = Chat.new(self)
     @game = Game.new(self)
     @update_running = false
   end
@@ -14,29 +17,28 @@ class App
     # only 4 players allowed
     return if @users.count >= 4
     user = User.new(name, socket, data['icon'])
-    user.subscribe(@chat, :chat)
+    user.subscribe(@chat.channel, :chat)
     @users[socket] = user
-    chat_all("User '#{name}' signed on")
+
+    msg = ChatMessage.new(body: "User '#{name}' signed on")
+    @chat.send(msg)
+
   end
 
   def remove_user(crit)
     user = find_user(crit)
     unless user.nil?
       @game.leave(user)
-      user.unsubscribe(@chat, :chat)
-      chat_all("User '#{user.name}' signed off")
+      user.unsubscribe(@chat.channel, :chat)
+
+      cmsg = ChatMessage.new(body: "User '#{user.name}' signed off")
+      @chat.send(cmsg)
+
       puts "removed #{user.name}"
       @users.delete user.socket
       msg = {:type => :user, :subtype => :deleted, :name => user.name}.to_json
       message_all(msg)
     end
-  end
-
-  def chat_all(_message, user=nil)
-    user = find_user(user)
-    _message = "|#{user.name}| #{_message}" unless user.nil?
-    msg = {:type => :chat, :subtype => :new_message, :message => _message}.to_json
-    @chat.push(msg)
   end
 
   def message_all(_message)
@@ -60,13 +62,14 @@ class App
 
   def chat_message(data, socket)
     case data['subtype']
-    when 'public_message' then chat_all(data['data']['message'], socket)
+    when 'public_message'
+      user = find_user(socket)
+      @chat.send(ChatMessage.new({sender: user, body: data['data']['message']})) if user
     end
   end
 
   def game_message(data, socket)
     user = find_user(socket)
-    puts data
     return if user.nil?
     case data['subtype']
     when 'join' then @game.join(user)
