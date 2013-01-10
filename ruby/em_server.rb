@@ -8,11 +8,11 @@ require 'em-hiredis'
 require 'json'
 require 'matrix'
 
-# require all ruby files of the game
-Dir.foreach(File.dirname(__FILE__)) do |file|
-  if (File.absolute_path(file) != __FILE__) and not File.directory?(file)
-    require File.split(File.absolute_path(__FILE__))[0]+'/'+file
-  end
+# require all ruby files of the CURRENT directory
+path = File.split(File.absolute_path(__FILE__))[0]
+Dir.foreach(path) do |file|
+  src = [path, file].join('/')
+  require src unless (src != __FILE__) and File.directory?(file)
 end
 
 EventMachine.run do
@@ -22,8 +22,6 @@ EventMachine.run do
   @app = App.new
 
   EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 9020) do |socket|
-  # EventMachine::WebSocket.start(:host => '10.20.1.9', :port => 9020) do |socket|
-
     socket.onopen do
       puts "WebSocket opened!"
     end
@@ -34,7 +32,6 @@ EventMachine.run do
       rescue JSON::ParserError => e
         puts e
       else
-        # puts data
         case data['type']
         when 'general' then
           case data['subtype']
