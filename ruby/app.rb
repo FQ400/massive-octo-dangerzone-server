@@ -66,6 +66,7 @@ class App
 
   def game_message(data, socket)
     user = find_user(socket)
+    puts data
     return if user.nil?
     case data['subtype']
     when 'join' then @game.join(user)
@@ -73,7 +74,7 @@ class App
     when 'keydown' then key(user, data['data'], 1)
     when 'keyup' then key(user, data['data'], 0)
     when 'shoot' then @game.shoot(user, data['data'])
-    when 'rotate' then @game.rotate_user(user, data['data'])
+    when 'rotate' then user.angle = -data['data']
     end
   end
 

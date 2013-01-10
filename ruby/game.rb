@@ -76,10 +76,6 @@ class Game
     end
   end
 
-  def rotate_user(user, angle)
-    user.angle = -angle
-  end
-
   def object_angle
     (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :angle) }
   end
