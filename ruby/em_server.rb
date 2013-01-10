@@ -12,7 +12,7 @@ require 'matrix'
 path = File.split(File.absolute_path(__FILE__))[0]
 Dir.foreach(path) do |file|
   src = [path, file].join('/')
-  require src unless (src != __FILE__) and File.directory?(file)
+  require src unless (src == __FILE__) or File.directory?(file)
 end
 
 EventMachine.run do
