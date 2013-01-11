@@ -8,6 +8,7 @@ require 'em-hiredis'
 require 'json'
 
 require_relative 'app'
+require_relative 'ruby_extension'
 
 EventMachine.run do
 

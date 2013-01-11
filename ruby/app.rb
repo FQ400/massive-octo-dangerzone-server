@@ -5,6 +5,8 @@ require 'matrix'
 require_relative 'ruby_extension'
 require_relative 'user'
 require_relative 'game'
+require_relative 'chat'
+require_relative 'chat_message'
 
 class App
 
