@@ -13,10 +13,13 @@ class GameObject
     @direction = Vector[0, 0]
     @angle = 0
     @killed = false
+    @hp = 10000
   end
 
   def alive?
-    (not @killed) and (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and (@range < 0 or (@start_position - @position).norm < @range)
+    (not @killed) and
+    (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and
+    (@range < 0 or (@start_position - @position).norm < @range)
   end
 
   def kill

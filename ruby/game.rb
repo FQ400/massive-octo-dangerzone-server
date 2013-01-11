@@ -36,13 +36,9 @@ class Game
     user.unsubscribe(@channel, :game)
     @scene.users.delete(user)
 
-    msg = ChatMessage.new({
-      sender: :game,
-      body: "User '#{user.name}' joined the game"
-    })
+    msg = ChatMessage.new(body: "User '#{user.name}' joined the game")
     @app.chat.send(msg)
 
-    # @app.chat_all("User '#{user.name}' left the game")
     objects = [{:id => user.id}]
     msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
     @channel.push(msg)

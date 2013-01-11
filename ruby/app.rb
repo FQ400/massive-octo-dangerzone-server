@@ -104,7 +104,7 @@ class App
     positions = @game.object_pos
     angles = @game.object_angle
     sizes = @game.object_size
-    msg = {:type => 'game', :subtype => 'state', :positions => positions, :angles => angles, :sizes => sizes }.to_json
+    msg = { :type => 'game', :subtype => 'state', :positions => positions, :angles => angles, :sizes => sizes }.to_json
     message_all(msg)
     @update_running = false
   end
