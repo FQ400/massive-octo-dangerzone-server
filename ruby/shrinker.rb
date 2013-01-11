@@ -1,5 +1,3 @@
-require_relative 'pickup'
-
 class Shrinker < Pickup
 
   def initialize(icon, start_position, direction, size, speed, ttl, range)

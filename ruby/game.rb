@@ -1,12 +1,3 @@
-require 'eventmachine'
-require 'matrix'
-
-require_relative 'projectile'
-require_relative 'pickup'
-require_relative 'shrinker'
-require_relative 'scene'
-require_relative 'collision_handler'
-
 class Game
 
   def initialize(app)
