@@ -1,5 +1,5 @@
 class GameObject
-  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner
+  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner, :hp
 
   def initialize(icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
     @id = rand(10000000)
@@ -30,9 +30,10 @@ class GameObject
     {
       id: @id,
       icon: @icon,
-      position: @position,
+      position: @position.to_a,
       size: @size,
-      angle: @angle
+      angle: @angle,
+      hp: @hp
     }
   end
 end

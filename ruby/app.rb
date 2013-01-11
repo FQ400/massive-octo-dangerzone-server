@@ -84,11 +84,7 @@ class App
     return if @update_running
     @update_running = true
     @game.update_objects
-    positions = @game.object_pos
-    angles = @game.object_angle
-    sizes = @game.object_size
-    objects ={}
-    msg = { :type => 'game', :subtype => 'state', :positions => positions, :angles => angles, :sizes => sizes }.to_json
+    msg = { :type => 'game', :subtype => 'state', :data => @game.objects_data }.to_json
     @game.channel.push(msg)
     @update_running = false
   end

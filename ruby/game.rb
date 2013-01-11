@@ -26,7 +26,6 @@ class Game
     @scene.users.push(user)
     msg = ChatMessage.new(body: "User '#{user.name}' joined the game")
     @app.chat.send(msg)
-    # @app.chat_all("User '#{user.name}' joined the game")
     init_user(user)
     msg = {:type => :game, :subtype => :init, :id => user.id}.to_json
     user.socket.send(msg)
@@ -83,17 +82,8 @@ class Game
     end
   end
 
-  def object_angle
-    (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :angle) }
-  end
-
-  def object_size
-    (@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :size) }
-  end
-
-  def object_pos
-    (@scene.objects + @scene.users).collect { |o| {:id => o.id, :position => o.position.to_a} }
-    #(@scene.objects + @scene.users).collect { |o| o.hashify.only(:id, :position) }
+  def objects_data
+    (@scene.objects + @scene.users).collect { |o| o.hashify }
   end
 
   def shoot(user, position)
