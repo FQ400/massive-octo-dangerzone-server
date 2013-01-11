@@ -1,5 +1,7 @@
 class Game
 
+  attr_reader :channel
+
   def initialize(app)
     @channel = EventMachine::Channel.new
     @scene = Scene.new
@@ -96,7 +98,7 @@ class Game
 
   def shoot(user, position)
     icon = ''
-    direction = (position.to_v - user.position.to_v).normalize()
+    direction = (position.to_v - user.position).normalize()
     object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 900)
     object.angle = user.angle
     @scene.objects.push(object)

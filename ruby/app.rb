@@ -36,13 +36,7 @@ class App
       puts "removed #{user.name}"
       @users.delete user.socket
       msg = {:type => :user, :subtype => :deleted, :name => user.name}.to_json
-      message_all(msg)
-    end
-  end
-
-  def message_all(_message)
-    @users.values.each do |user|
-      message(user, _message)
+      @game.channel.push(msg)
     end
   end
 
@@ -93,8 +87,9 @@ class App
     positions = @game.object_pos
     angles = @game.object_angle
     sizes = @game.object_size
+    objects ={}
     msg = { :type => 'game', :subtype => 'state', :positions => positions, :angles => angles, :sizes => sizes }.to_json
-    message_all(msg)
+    @game.channel.push(msg)
     @update_running = false
   end
 end
