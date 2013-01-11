@@ -1,20 +1,9 @@
-require 'eventmachine'
-require 'em-websocket'
-require 'matrix'
-
-require_relative 'ruby_extension'
-require_relative 'user'
-require_relative 'game'
-require_relative 'chat'
-require_relative 'chat_message'
-
 class App
 
   attr_reader :chat
 
   def initialize
     @users = {}
-    # @chat = EventMachine::Channel.new
     @chat = Chat.new(self)
     @game = Game.new(self)
     @update_running = false
