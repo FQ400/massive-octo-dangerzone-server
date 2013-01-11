@@ -1,3 +1,5 @@
+require_relative 'game_object'
+
 class Pickup < GameObject
 
   def initialize(icon, start_position, direction, size, speed, ttl, range)

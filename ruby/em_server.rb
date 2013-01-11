@@ -6,14 +6,8 @@ require 'eventmachine'
 require 'em-websocket'
 require 'em-hiredis'
 require 'json'
-require 'matrix'
 
-# require all ruby files of the CURRENT directory
-path = File.split(File.absolute_path(__FILE__))[0]
-Dir.foreach(path) do |file|
-  src = [path, file].join('/')
-  require src unless (src == __FILE__) or File.directory?(file)
-end
+require_relative 'app'
 
 EventMachine.run do
 

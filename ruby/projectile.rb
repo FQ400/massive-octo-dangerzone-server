@@ -1,3 +1,5 @@
+require_relative 'game_object'
+
 class Projectile < GameObject
   attr_reader :owner
 

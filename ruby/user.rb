@@ -1,3 +1,12 @@
+require_relative 'game_object'
+
+# make single elements assignable
+class Vector
+  def []=(i, x)
+    @elements[i] = x
+  end
+end
+
 class User < GameObject
   attr_accessor :name, :socket, :start_position, :key_states
 

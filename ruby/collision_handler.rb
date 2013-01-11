@@ -1,3 +1,6 @@
+require_relative 'user'
+require_relative 'pickup'
+
 class CollisionHandler
 
   def initialize(scene)
