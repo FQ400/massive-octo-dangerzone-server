@@ -16,6 +16,7 @@ class Scene
 
   def move_users
     @users.each do |user|
+      user.update_angle
       user.direction = user.rotation_matrix * user.move_direction
     end
   end

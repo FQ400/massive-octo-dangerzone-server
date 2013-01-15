@@ -71,6 +71,7 @@ class App
     when 'keyup' then key(user, data['data'], 0)
     when 'shoot' then @game.shoot(user, data['data'])
     when 'rotate' then user.angle = -data['data']
+    when 'mouse_move' then user.mouse_move data['data']
     end
   end
 

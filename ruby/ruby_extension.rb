@@ -1,3 +1,5 @@
+require 'matrix'
+
 class Hash
   # returns a new hash including the keys that passed
   def only *keys
@@ -20,5 +22,9 @@ end
 class Vector
   def []=(i, x)
     @elements[i] = x
+  end
+
+  def to_v
+    self
   end
 end

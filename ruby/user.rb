@@ -11,6 +11,7 @@ class User < GameObject
     @key_states = { left: 0, right: 0, up: 0, down: 0 }
     @size = 60
     @hp = 100
+    @focus = Vector[0, -1]
   end
 
   def subscribe(channel, name)
@@ -46,4 +47,12 @@ class User < GameObject
     ]
   end
 
+  def mouse_move(coords)
+    @focus = coords.to_v
+  end
+
+  def update_angle
+    new = (@position - @focus)
+    @angle = -Math.atan2(*new.normalize()) if new.norm() > 0
+  end
 end

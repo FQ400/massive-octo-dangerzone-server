@@ -68,7 +68,6 @@ class Game
       msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
       @channel.push(msg)
     end
-
   end
 
   def update_objects
