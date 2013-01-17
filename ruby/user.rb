@@ -4,7 +4,7 @@ class User < GameObject
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
   def initialize(name, socket, icon)
-    super(icon, Vector[0, 0], 60, 100, -1, -1)
+    super(icon, Vector[0, 0], Vector[0, 0], 60, 100, -1, -1)
     @name = name
     @socket = socket
     @ids = {}

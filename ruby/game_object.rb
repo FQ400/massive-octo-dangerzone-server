@@ -1,7 +1,7 @@
 class GameObject
   attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner, :hp
 
-  def initialize(icon, position=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
+  def initialize(icon, position=Vector[0, 0], direction=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
     @id = rand(10000000)
     @icon = icon
     @position = @start_position = position
@@ -10,7 +10,7 @@ class GameObject
     @ttl = ttl
     @spawn_time = Time.now.to_f
     @range = range
-    @direction = Vector[0, 0]
+    @direction = direction
     @angle = 0
     @killed = false
     @hp = 10000

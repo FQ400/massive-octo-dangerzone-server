@@ -47,10 +47,8 @@ class CollisionHandler
   end
 
   def handle_user_object(user, object)
-    return if user == object.owner
     if object.is_a?(Pickup)
       object.apply(user)
-      object.kill
     end
   end
 end

@@ -13,8 +13,8 @@ class Game
 
   def init_objects
     objects = [
-      Pickup.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1),
-      Pickup.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1),
+      Turbo.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1),
+      Turbo.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1),
       Shrinker.new('', Vector[400, 300], Vector[0, 0], 3, 300, -1, -1),
     ]
     @scene.objects += objects
