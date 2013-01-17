@@ -12,16 +12,13 @@ class App
   def register(data, socket)
     name = data['name']
     remove_user(name)
-
     # only 4 players allowed
     return if @users.count >= 4
     user = User.new(name, socket, data['icon'])
     user.subscribe(@chat.channel, :chat)
     @users[socket] = user
-
     msg = ChatMessage.new(body: "User '#{name}' signed on")
     @chat.send(msg)
-
   end
 
   def remove_user(crit)
@@ -38,10 +35,6 @@ class App
       msg = {:type => :user, :subtype => :deleted, :name => user.name}.to_json
       @game.channel.push(msg)
     end
-  end
-
-  def message(user, _message)
-    user.socket.send(_message)
   end
 
   def find_user(crit)
