@@ -5,7 +5,6 @@ class GameObject
     options = {
       angle: 0,
       direction: Vector[0,0],
-      hp: 10000,
       icon: nil,
       killed: false,
       position: Vector[0,0],
