@@ -34,4 +34,9 @@ class Scene
   def move_object(user, diff)
     user.position += diff
   end
+
+  def all
+    @users + @objects
+  end
+
 end
