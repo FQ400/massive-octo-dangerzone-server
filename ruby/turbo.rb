@@ -1,6 +1,6 @@
 class Turbo < Pickup
 
-  def initialize(options)
+  def initialize(options={})
     options = {
       icon: 'http://i1-news.softpedia-static.com/images/news2/Speed-Download-5-1-4-Available-Download-Here-2.jpg',
       size: 40,

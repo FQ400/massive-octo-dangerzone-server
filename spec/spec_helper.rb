@@ -28,5 +28,5 @@ class DummySocket
 end
 
 def create_user(name)
-  User.new(name, DummySocket.new, '')
+  User.new(name, DummySocket.new, {})
 end
