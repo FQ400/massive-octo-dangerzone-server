@@ -95,7 +95,7 @@ class Game
     icon = ''
     # speed = user.speed * (direction * user.rotation_matrix * user.move_direction)
     object = Projectile.new(user, {
-      position: user.position,
+      position: user.position.clone,
       direction: (position.to_v - user.position).normalize(),
       angle: user.angle
     })

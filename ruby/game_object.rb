@@ -16,7 +16,6 @@ class GameObject
       ttl: -1,
       visible: true
     }.merge(options)
-
     @id = rand(10000000)
     @start_position = @options[:position] 
     @spawn_time = Time.now.to_f
@@ -24,39 +23,35 @@ class GameObject
   end
 
   def alive?
-    (not @killed) and
-    (ttl < 0 or (Time.now.to_f - @spawn_time) < ttl) and
-    (range < 0 or (@start_position - position).norm < range)
+    (not self[:killed]) and
+    (self[:ttl] < 0 or (Time.now.to_f - @spawn_time) < self[:ttl]) and
+    (self[:range] < 0 or (@start_position - self[:position]).norm < self[:range])
   end
 
   def kill
-    @killed = true
+    self[:killed] = true
   end
 
   def hashify
     {
-      id: id,
-      icon: icon,
-      position: position.to_a,
-      size: size,
-      angle: angle,
-      hp: hp,
-      visible: visible
+      id: @id,
+      icon: self[:icon],
+      position: self[:position].to_a,
+      size: self[:size],
+      angle: self[:angle],
+      hp: self[:hp],
+      visible: self[:visible]
     }
   end
 
   # TODO respond_to anpassen
   def method_missing(name, *args, &block)
     orig_name = name
-    if name[-1] == '='
-      name = name[0..-2]
-    end
+    name = name.to_s
+    name = name[0..-2] if name[-1] == '='
     if @options.has_key?(name.to_sym)
       args.count > 0 ? @options[name.to_sym] = args[0] : apply_effects(name.to_sym)
     else
-      puts name
-      puts args
-      puts @options
       super(orig_name, *args, block)
     end
   end
@@ -70,4 +65,11 @@ class GameObject
     value
   end
 
+  def [](key)
+    apply_effects(key.to_sym)
+  end
+
+  def []=(key, value)
+    @options[key] = value
+  end
 end
