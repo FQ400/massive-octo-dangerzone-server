@@ -12,9 +12,7 @@ class Turbo < Pickup
   end
 
   def apply(user)
-    user.effects[:speed] ||= []
-    user.effects[:speed].push(TurboEffect.new(user))
+    user.add_effect(TurboEffect.new(user, {}))
     kill
   end
-
 end

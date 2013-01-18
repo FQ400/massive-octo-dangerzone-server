@@ -1,9 +1,10 @@
 class GameObject
-  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :hp, :visible, :effects
+  attr_accessor :id, :effects
 
   def initialize(options)
-    options = {
+    @options = {
       angle: 0,
+      position: Vector[0,0],
       direction: Vector[0,0],
       icon: nil,
       killed: false,
@@ -14,50 +15,60 @@ class GameObject
       ttl: -1,
       visible: true
     }.merge(options)
-    
-    options.each do |key, value|
-      instance_variable_set("@#{key.to_s}", value)
-    end
-    
     @id = rand(10000000)
-    @start_position = @position 
+    @start_position = @options[:position] 
     @spawn_time = Time.now.to_f
     @effects = {}
   end
 
   def alive?
-    (not @killed) and
-    (@ttl < 0 or (Time.now.to_f - @spawn_time) < @ttl) and
-    (@range < 0 or (@start_position - @position).norm < @range)
+    (not self[:killed]) and
+    (self[:ttl] < 0 or (Time.now.to_f - @spawn_time) < self[:ttl]) and
+    (self[:range] < 0 or (@start_position - self[:position]).norm < self[:range])
   end
 
   def kill
-    @killed = true
+    self[:killed] = true
   end
 
   def hashify
     {
       id: @id,
-      icon: @icon,
-      position: @position.to_a,
-      size: @size,
-      angle: @angle,
-      hp: @hp,
-      visible: @visible
+      icon: self[:icon],
+      position: self[:position].to_a,
+      size: self[:size],
+      angle: self[:angle],
+      hp: self[:hp],
+      visible: self[:visible]
     }
   end
 
-  def speed
-    apply_effects('speed')
+  # TODO respond_to anpassen
+  def method_missing(name, *args, &block)
+    orig_name = name
+    name = name.to_s
+    name = name[0..-2] if name[-1] == '='
+    if @options.has_key?(name.to_sym)
+      args.count > 0 ? @options[name.to_sym] = args[0] : apply_effects(name.to_sym)
+    else
+      super(orig_name, *args, block)
+    end
   end
 
   def apply_effects(attr)
-    value = instance_variable_get(('@' + attr).to_sym)
-    return value if @effects[attr.to_sym].nil?
-    @effects[attr.to_sym].each do |effect|
+    value = @options[attr]
+    return value if @effects[attr].nil?
+    @effects[attr].each do |effect|
       value = effect.apply(value)
     end
     value
   end
 
+  def [](key)
+    apply_effects(key.to_sym)
+  end
+
+  def []=(key, value)
+    @options[key] = value
+  end
 end

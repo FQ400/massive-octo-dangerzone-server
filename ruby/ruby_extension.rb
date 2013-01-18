@@ -25,6 +25,6 @@ class Vector
   end
 
   def to_v
-    self
+    Vector.elements(self)
   end
 end

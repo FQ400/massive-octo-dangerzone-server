@@ -27,7 +27,7 @@ class User < GameObject
   end
 
   def init_position(position)
-    @position = @start_position = position.to_v
+    self[:position] = @start_position = position.to_v
   end
 
   def keypress_direction(direction, down)
@@ -35,7 +35,7 @@ class User < GameObject
   end
 
   def rotation_matrix
-    c, s = Math.cos(@angle), Math.sin(@angle)
+    c, s = Math.cos(self[:angle]), Math.sin(self[:angle])
     Matrix[
       [c, -s],
       [s, c]
@@ -54,7 +54,17 @@ class User < GameObject
   end
 
   def update_angle
-    new_angle = (@position - @focus)
-    @angle = -Math.atan2(*new_angle.normalize()) if new_angle.norm() > 0
+    new_angle = (self[:position] - @focus)
+    self[:angle] = -Math.atan2(*new_angle.normalize()) if new_angle.norm() > 0
   end
+
+  def add_effect(effect)
+    @effects[effect.type] ||= []
+    @effects[effect.type].push(effect)
+  end
+
+  def remove_effect(effect)
+    @effects[effect.type].delete(effect)
+  end
+
 end

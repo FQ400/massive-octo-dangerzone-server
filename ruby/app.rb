@@ -78,8 +78,8 @@ class App
     return if @update_running
     @update_running = true
     @game.update_objects
-    msg = { :type => 'game', :subtype => 'state', :data => @game.objects_data }.to_json
-    @game.channel.push(msg)
+    @game.push_object_info
     @update_running = false
   end
+
 end

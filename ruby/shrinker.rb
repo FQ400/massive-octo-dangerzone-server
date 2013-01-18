@@ -1,6 +1,5 @@
 class Shrinker < Pickup
 
-  # def initialize(icon, start_position, direction, size, speed, ttl, range)
   def initialize(options)
     options = {
       icon: 'http://img.informer.com/icons/png/32/3298/3298271.png',
@@ -13,7 +12,7 @@ class Shrinker < Pickup
   end
   
   def apply(user)
-    user.size /= 3
+    user.add_effect(ShrinkEffect.new(user))
     kill
   end
 

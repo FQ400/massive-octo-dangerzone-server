@@ -56,24 +56,30 @@ class Game
     objects = [user]
     update_object_list(created: objects)
     user.subscribe(@channel, :game)
-    objects = (@scene.users + @scene.objects).collect { |o| o.hashify }
-    msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
+    msg = complete_info_msg(@scene.all)
     user.socket.send(msg)
   end
 
   def update_object_list(args)
     created = args[:created]
     deleted = args[:deleted]
-    if created
-      objects = created.collect { |o| o.hashify }
-      msg = {:type => :game, :subtype => :objects_created, :objects => objects}.to_json
-      @channel.push(msg)
-    end
-    if deleted
-      objects = deleted.collect { |o| o.hashify.only(:id) }
-      msg = {:type => :game, :subtype => :objects_deleted, :objects => objects}.to_json
-      @channel.push(msg)
-    end
+    msgs = []
+    msgs.push(complete_info_msg(created)) if created
+    msgs.push(id_info_msg(deleted)) if deleted
+    msgs.each { |msg| @channel.push(msg) }
+  end
+
+  def complete_info_msg(objects, subtype=:objects_created)
+    object_info_msg(objects, subtype) { |o| o.hashify }
+  end
+
+  def id_info_msg(objects, subtype=:objects_deleted)
+    object_info_msg(objects, subtype) { |o| o.hashify.only(:id) }
+  end
+
+  def object_info_msg(objects, subtype, &block)
+    objects = objects.select { |o| o.visible }.collect { |o| block.call(o) }
+    {:type => :game, :subtype => subtype, :objects => objects}.to_json
   end
 
   def update_objects
@@ -87,15 +93,16 @@ class Game
     end
   end
 
-  def objects_data
-    (@scene.objects + @scene.users).collect { |o| o.hashify }
+  def push_object_info
+    msg = complete_info_msg(@scene.all, :state)
+    @channel.push(msg)
   end
 
   def shoot(user, position)
     icon = ''
     # speed = user.speed * (direction * user.rotation_matrix * user.move_direction)
     object = Projectile.new(user, {
-      position: user.position,
+      position: user.position.clone,
       direction: (position.to_v - user.position).normalize(),
       angle: user.angle
     })
