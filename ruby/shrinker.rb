@@ -12,7 +12,7 @@ class Shrinker < Pickup
   end
   
   def apply(user)
-    user.size /= 3
+    user.add_effect(ShrinkEffect.new(user))
     kill
   end
 
