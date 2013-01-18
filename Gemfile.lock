@@ -5,6 +5,8 @@ GEM
     diff-lcs (1.1.3)
     em-hiredis (0.1.1)
       hiredis (~> 0.4.0)
+    em-rspec (0.1.1)
+      eventmachine (>= 0.12.10)
     em-websocket (0.3.8)
       addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
@@ -25,6 +27,7 @@ PLATFORMS
 
 DEPENDENCIES
   em-hiredis (~> 0.1.1)
+  em-rspec
   em-websocket (~> 0.3.8)
   eventmachine (~> 1.0.0)
   rspec
