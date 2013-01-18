@@ -1,5 +1,11 @@
 require 'rspec'
 
+require 'eventmachine'
+require 'em-websocket'
+require 'em-hiredis'
+require 'json'
+require 'matrix'
+
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 
 DO_NOT_REQUIRE_THIS_FILES = [
