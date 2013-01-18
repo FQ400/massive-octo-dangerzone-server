@@ -1,19 +1,28 @@
 class GameObject
   attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner, :hp
 
-  def initialize(icon, position=Vector[0, 0], direction=Vector[0, 0], size=60, speed=100, ttl=-1, range=300)
+  def initialize(options)
+    options = {
+      angle: 0,
+      direction: Vector[0,0],
+      hp: 10000,
+      icon: nil,
+      killed: false,
+      position: Vector[0,0],
+      range: 300,
+      size: 60,
+      speed: 100,
+      ttl: -1
+    }.merge(options)
+    
+    options.each do |key, value|
+      instance_variable_set("@#{key.to_s}", value)
+    end
+    
     @id = rand(10000000)
-    @icon = icon
-    @position = @start_position = position
-    @size = 60
-    @speed = speed
-    @ttl = ttl
+    @start_position = @position 
     @spawn_time = Time.now.to_f
-    @range = range
-    @direction = direction
-    @angle = 0
-    @killed = false
-    @hp = 10000
+    
   end
 
   def alive?

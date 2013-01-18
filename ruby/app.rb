@@ -14,7 +14,7 @@ class App
     remove_user(name)
     # only 4 players allowed
     return if @users.count >= 4
-    user = User.new(name, socket, data['icon'])
+    user = User.new(name, socket, {icon: data['icon']})
     user.subscribe(@chat.channel, :chat)
     @users[socket] = user
     msg = ChatMessage.new(body: "User '#{name}' signed on")

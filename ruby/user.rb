@@ -3,14 +3,16 @@ class User < GameObject
 
   DIRECTIONS = ['left', 'up', 'right', 'down']
 
-  def initialize(name, socket, icon)
-    super(icon, Vector[0, 0], Vector[0, 0], 60, 100, -1, -1)
+  def initialize(name, socket, options)
+    options = {
+      hp: 100,
+      size: 60
+      }.merge(options)
+    super(options)
     @name = name
     @socket = socket
     @ids = {}
     @key_states = { left: 0, right: 0, up: 0, down: 0 }
-    @size = 60
-    @hp = 100
     @focus = Vector[0, -1]
   end
 
@@ -52,7 +54,7 @@ class User < GameObject
   end
 
   def update_angle
-    new = (@position - @focus)
-    @angle = -Math.atan2(*new.normalize()) if new.norm() > 0
+    new_angle = (@position - @focus)
+    @angle = -Math.atan2(*new_angle.normalize()) if new_angle.norm() > 0
   end
 end

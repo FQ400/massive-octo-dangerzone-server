@@ -13,9 +13,15 @@ class Game
 
   def init_objects
     objects = [
-      Turbo.new('', Vector[200, 200], Vector[0, 0], 3, 300, -1, -1),
-      Turbo.new('', Vector[500, 150], Vector[0, 0], 3, 300, -1, -1),
-      Shrinker.new('', Vector[400, 300], Vector[0, 0], 3, 300, -1, -1),
+      Turbo.new({
+        position: Vector[200, 200]
+      }),
+      Turbo.new({
+        position: Vector[500, 150]
+      }),
+      Shrinker.new({
+        position: Vector[400, 300]
+      })
     ]
     @scene.objects += objects
     update_object_list(created: objects)
@@ -88,8 +94,11 @@ class Game
   def shoot(user, position)
     icon = ''
     direction = (position.to_v - user.position).normalize()
-    object = Projectile.new(icon, user.position, direction, user, 3, 300, 100, 900)
-    object.angle = user.angle
+    object = Projectile.new(user, {
+      position: user.position,
+      direction: (position.to_v - user.position).normalize(),
+      angle: user.angle
+    })
     @scene.objects.push(object)
     update_object_list(created: [object])
   end
