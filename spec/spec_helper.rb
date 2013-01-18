@@ -21,3 +21,12 @@ RSpec.configure do |config|
   config.add_formatter 'documentation'
   config.color = true
 end
+
+class DummySocket
+  def send(mesg)
+  end
+end
+
+def create_user(name)
+  User.new(name, DummySocket.new, '')
+end
