@@ -16,4 +16,5 @@ class Shrinker < Pickup
     user.size /= 3
     kill
   end
+
 end

@@ -1,5 +1,5 @@
 class GameObject
-  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :owner, :hp
+  attr_accessor :id, :icon, :position, :direction, :angle, :speed, :direction, :size, :hp, :visible, :effects
 
   def initialize(options)
     options = {
@@ -12,7 +12,8 @@ class GameObject
       range: 300,
       size: 60,
       speed: 100,
-      ttl: -1
+      ttl: -1,
+      visible: true
     }.merge(options)
     
     options.each do |key, value|
@@ -22,7 +23,7 @@ class GameObject
     @id = rand(10000000)
     @start_position = @position 
     @spawn_time = Time.now.to_f
-    
+    @effects = {}
   end
 
   def alive?
@@ -42,7 +43,22 @@ class GameObject
       position: @position.to_a,
       size: @size,
       angle: @angle,
-      hp: @hp
+      hp: @hp,
+      visible: @visible
     }
   end
+
+  def speed
+    apply_effects('speed')
+  end
+
+  def apply_effects(attr)
+    value = instance_variable_get(('@' + attr).to_sym)
+    return value if @effects[attr.to_sym].nil?
+    @effects[attr.to_sym].each do |effect|
+      value = effect.apply(value)
+    end
+    value
+  end
+
 end

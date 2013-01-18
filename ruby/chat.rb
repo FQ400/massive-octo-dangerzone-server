@@ -1,3 +1,5 @@
+require 'eventmachine'
+
 class Chat
 
   attr_reader :channel
@@ -44,5 +46,3 @@ class Chat
   end
 
 end
-
-

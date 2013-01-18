@@ -12,8 +12,8 @@ class Turbo < Pickup
   end
 
   def apply(user)
-    return if user == @owner
-    user.speed *= 3
+    user.effects[:speed] ||= []
+    user.effects[:speed].push(TurboEffect.new(user))
     kill
   end
 

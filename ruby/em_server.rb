@@ -20,7 +20,6 @@ Dir.foreach(path) do |file|
   end
 end
 
-
 EventMachine.run do
 
   puts 'Game server started... ;)'

@@ -1,3 +1,5 @@
+require_relative 'game_object'
+
 class Pickup < GameObject
 
   def initialize(options)

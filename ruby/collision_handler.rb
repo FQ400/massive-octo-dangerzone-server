@@ -47,8 +47,6 @@ class CollisionHandler
   end
 
   def handle_user_object(user, object)
-    if object.is_a?(Pickup)
-      object.apply(user)
-    end
+    object.apply(user)
   end
 end

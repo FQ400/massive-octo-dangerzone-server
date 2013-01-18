@@ -1,5 +1,4 @@
 class Projectile < GameObject
-  attr_reader :owner
 
   # def initialize(icon, start_position, direction, owner, size, speed, ttl, range)
   def initialize(owner, options)
@@ -12,5 +11,9 @@ class Projectile < GameObject
     }.merge(options)
     super(options)
     @owner = owner
+  end
+
+  def apply(user)
+    return if user == @owner
   end
 end

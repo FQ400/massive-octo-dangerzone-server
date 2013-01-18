@@ -93,7 +93,7 @@ class Game
 
   def shoot(user, position)
     icon = ''
-    direction = (position.to_v - user.position).normalize()
+    # speed = user.speed * (direction * user.rotation_matrix * user.move_direction)
     object = Projectile.new(user, {
       position: user.position,
       direction: (position.to_v - user.position).normalize(),
