@@ -58,13 +58,4 @@ class User < GameObject
     self[:angle] = -Math.atan2(*new_angle.normalize()) if new_angle.norm() > 0
   end
 
-  def add_effect(effect)
-    @effects[effect.type] ||= []
-    @effects[effect.type].push(effect)
-  end
-
-  def remove_effect(effect)
-    @effects[effect.type].delete(effect)
-  end
-
 end

@@ -71,4 +71,13 @@ class GameObject
   def []=(key, value)
     @options[key] = value
   end
+
+  def add_effect(effect)
+    @effects[effect.type] ||= []
+    @effects[effect.type].push(effect)
+  end
+
+  def remove_effect(effect)
+    @effects[effect.type].delete(effect)
+  end
 end
