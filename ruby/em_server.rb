@@ -8,7 +8,10 @@ require 'em-hiredis'
 require 'json'
 require 'matrix'
 
-require_relative 'ruby_extension'
+REQUIRE_RELATIVE = [
+  'ruby_extension',
+  'exceptions'
+].each {|file| require_relative file }
 
 # autoload all required files in dir and subdirs
 def load_files_of(path)
@@ -19,8 +22,11 @@ def load_files_of(path)
     load_files_of(src) if File.directory?(src) and file != '.' and file != '..'
     
     sym = File.basename(file, '.rb').split('_').map{|el| el.capitalize}.join('').to_sym
-    unless (src == __FILE__) or File.directory?(file) or !(src[-3,3] == '.rb') or (file == 'ruby_extension')
-      autoload sym, src
+    unless (src == __FILE__) or 
+      File.directory?(file) or 
+      !(src[-3,3] == '.rb') or 
+      (REQUIRE_RELATIVE.include?(file))
+        autoload sym, src
     end
   end
 end
