@@ -10,15 +10,24 @@ require 'matrix'
 
 require_relative 'ruby_extension'
 
-# autoload all required files
-path = File.split(File.absolute_path(__FILE__))[0]
-Dir.foreach(path) do |file|
-  src = [path, file].join('/')
-  sym = File.basename(file, '.rb').split('_').map{|el| el.capitalize}.join('').to_sym
-  unless (src == __FILE__) or File.directory?(file) or !(src[-3,3] == '.rb') or (file == 'ruby_extension')
-    autoload sym, src
+# autoload all required files in dir and subdirs
+def load_files_of(path)
+  Dir.foreach(path) do |file|
+    src = [path, file].join('/')
+    
+    # call yourself if directory
+    load_files_of(src) if File.directory?(src) and file != '.' and file != '..'
+    
+    sym = File.basename(file, '.rb').split('_').map{|el| el.capitalize}.join('').to_sym
+    unless (src == __FILE__) or File.directory?(file) or !(src[-3,3] == '.rb') or (file == 'ruby_extension')
+      autoload sym, src
+    end
   end
 end
+
+path = File.split(File.absolute_path(__FILE__))[0]
+load_files_of(path)
+
 
 EventMachine.run do
 
