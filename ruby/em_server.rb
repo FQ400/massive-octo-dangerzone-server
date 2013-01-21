@@ -15,7 +15,7 @@ def load_files_of(path)
   Dir.foreach(path) do |file|
     src = [path, file].join('/')
     
-    # call yourself if directory
+    # call yourself if file is a directory
     load_files_of(src) if File.directory?(src) and file != '.' and file != '..'
     
     sym = File.basename(file, '.rb').split('_').map{|el| el.capitalize}.join('').to_sym

@@ -8,11 +8,13 @@ require 'matrix'
 
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 
+puts APP_ROOT
+
 DO_NOT_REQUIRE_THIS_FILES = [
   'em_server'
 ]
 
-Dir["#{APP_ROOT}/ruby/*.rb"].each do |f|
+Dir["#{APP_ROOT}/ruby/*.rb", "#{APP_ROOT}/ruby/**/*.rb"].each do |f|
   next if DO_NOT_REQUIRE_THIS_FILES.any? { |el| f.include?(el) }
   require f
 end
