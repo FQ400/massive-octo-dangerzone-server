@@ -1,5 +1,5 @@
 class Game
-
+  
   attr_reader :channel
 
   def initialize(app)

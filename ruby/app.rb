@@ -1,5 +1,7 @@
 class App
-
+  
+  include GameConfig
+  
   attr_reader :chat
 
   def initialize

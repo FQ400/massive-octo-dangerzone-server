@@ -28,3 +28,9 @@ class Vector
     Vector.elements(self)
   end
 end
+
+class Class
+  def to_sym
+    self.class.to_s.downcase.to_sym
+  end
+end
