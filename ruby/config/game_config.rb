@@ -1,5 +1,8 @@
 module GameConfig
   PICKUPS = {
+    pickup: {
+      direction: Vector[0,0]
+    },
     turbo: {
       icon: 'http://i1-news.softpedia-static.com/images/news2/Speed-Download-5-1-4-Available-Download-Here-2.jpg',
       size: 40,

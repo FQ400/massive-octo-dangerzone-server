@@ -1,9 +1,8 @@
 class Pickup < GameObject
 
   def initialize(options)
-    options = {
-      direction: Vector[0,0]
-    }.merge(options)
+    raise NoConfigException.new if GameConfig::PICKUPS[self.class.to_sym].nil?
+    options = GameConfig::PICKUPS[self.class.to_sym].merge(options)
     super(options)
   end
 

@@ -31,6 +31,6 @@ end
 
 class Class
   def to_sym
-    self.class.to_s.downcase.to_sym
+    self.to_s.downcase.to_sym
   end
 end
