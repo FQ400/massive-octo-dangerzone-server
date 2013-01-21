@@ -1,6 +1,7 @@
 require 'rspec'
 
 require 'eventmachine'
+require 'em-rspec'
 require 'em-websocket'
 require 'em-hiredis'
 require 'json'

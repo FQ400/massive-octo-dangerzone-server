@@ -1,6 +1,3 @@
-require 'json'
-require 'em-rspec'
-
 require_relative '../spec_helper'
 
 describe Turbo do
