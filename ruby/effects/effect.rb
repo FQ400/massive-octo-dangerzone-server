@@ -2,16 +2,12 @@ class Effect < GameObject
 
   attr_reader :target
 
-  def initialize(target, options)
-    options = {
-      visible: false,
-      type: nil
-      }.merge(options)
+  def initialize(target, options={})
     super(options)
     @target = target
   end
 
-  def apply(user)
+  def apply(user, type)
     unless alive?
       @target.remove_effect(self)
     end

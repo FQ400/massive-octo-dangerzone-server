@@ -2,23 +2,26 @@ class GameObject
   attr_accessor :id, :effects
 
   def initialize(options)
-    @options = {
-      angle: 0,
-      position: Vector[0,0],
-      direction: Vector[0,0],
-      icon: nil,
-      killed: false,
-      position: Vector[0,0],
-      range: 300,
-      size: 60,
-      speed: 100,
-      ttl: -1,
-      visible: true
-    }.merge(options)
+    @options = {}
+    init_config
+    @options.update(options)
     @id = rand(10000000)
     @start_position = @options[:position] 
     @spawn_time = Time.now.to_f
     @effects = {}
+  end
+
+  def init_config
+    index = self.class.ancestors.find_index { |c| c == GameObject }
+    classes = self.class.ancestors[0..index].reverse_each do |cls|
+      @options.update(config(cls.to_sym))
+    end
+  end
+
+  def config(name=nil)
+    name = self.class.to_sym if name.nil?
+    raise NoConfigException.new(name) if GameConfig::CONFIG[name].nil?
+    GameConfig::CONFIG[name]
   end
 
   def alive?
@@ -59,7 +62,7 @@ class GameObject
     value = @options[attr]
     return value if @effects[attr].nil?
     @effects[attr].each do |effect|
-      value = effect.apply(value)
+      value = effect.apply(value, attr)
     end
     value
   end
@@ -73,11 +76,20 @@ class GameObject
   end
 
   def add_effect(effect)
-    @effects[effect.type] ||= []
-    @effects[effect.type].push(effect)
+    types = effect.type
+    types = [types] unless types.is_a?(Array)
+    types.each do |type|
+      @effects[type] ||= []
+      @effects[type].push(effect)
+    end
   end
 
   def remove_effect(effect)
-    @effects[effect.type].delete(effect)
+    types = effect.type
+    types = [types] unless types.is_a?(Array)
+    types.each do |type|
+      @effects[type].delete(effect)
+    end
   end
+
 end

@@ -16,12 +16,12 @@ class Game
       Turbo.new({
         position: Vector[200, 200]
       }),
-      Turbo.new({
+      Cloak.new({
         position: Vector[500, 150]
       }),
       Shrinker.new({
         position: Vector[400, 300]
-      })
+      }),
     ]
     @scene.objects += objects
     update_object_list(created: objects)

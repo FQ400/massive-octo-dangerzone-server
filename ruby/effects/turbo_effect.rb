@@ -1,14 +1,10 @@
 class TurboEffect < Effect
 
-  def initialize(target, options)
-    options = {
-      ttl: 3,
-      type: :speed
-      }.merge(options)
+  def initialize(target, options={})
     super(target, options)
   end
 
-  def apply(speed)
+  def apply(speed, type)
     super
     speed * 3.0
   end
