@@ -2,8 +2,7 @@ class GameObject
   attr_accessor :id, :effects
 
   def initialize(options)
-    @options = {}
-    init_config
+    @options = default_config
     @options.update(options)
     @id = rand(10000000)
     @start_position = @options[:position] 
@@ -11,15 +10,14 @@ class GameObject
     @effects = {}
   end
 
-  def init_config
-    index = self.class.ancestors.find_index { |c| c == GameObject }
-    classes = self.class.ancestors[0..index].reverse_each do |cls|
-      @options.update(config(cls.to_sym))
-    end
+  def default_config
+    self.class.ancestors.take_while { |c| c != Object }
+      .reverse.collect{ |cls| config(cls.to_sym) }
+      .reduce(Hash.new, :merge)
   end
 
   def config(name=nil)
-    name = self.class.to_sym if name.nil?
+    name ||= self.class.to_sym
     raise NoConfigException.new(name) if GameConfig::CONFIG[name].nil?
     GameConfig::CONFIG[name]
   end
